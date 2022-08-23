@@ -1,8 +1,12 @@
 import { async } from '@firebase/util';
 import React, {useState} from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import {auth} from "../firebase"
+import {FcGoogle} from 'react-icons/fc'
+
+
+
 
 function Login2() {
     const navigate = useNavigate();
@@ -20,6 +24,24 @@ function Login2() {
         }).catch(err => console.log(err))
 
         
+    }
+
+    const signInWithGoogle = () =>{
+
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth,provider).then(
+        (res) => {
+          console.log(res.user.accessToken)
+          const authtoken = res.user.accessToken
+          if(authtoken != null || authtoken != "")
+          {
+            navigate("/home")
+          }
+          else
+          {
+            alert("Something went wrong")
+          }
+        }).catch((err)=> console.log(err))
     }
   return (
     <>
@@ -47,10 +69,14 @@ function Login2() {
                 
               </div> */}
               <button onClick={loginUser}  className='border w-full my-2 py-2 bg-indigo-700 text-white hover:bg-indigo-500'> Sign In</button>
+
+              <p className='text-sm text-center text-gray-500'>--------------OR--------------</p>
+
+              <button onClick={signInWithGoogle} className=' border w-full my-2 py-2 bg-indigo-700 text-white hover:bg-indigo-500'> Sign In with Google </button> 
               <div >
                 <nav>
                 <p>
-                  Didn't have an account? <button className=' text-sky-400 hover:text-blue-500'> <NavLink to="/signup">Sign up here</NavLink>  </button>
+                  Didn't have an account? <button className=' text-sky-400 hover:text-blue-500'> <NavLink to="/signup">Sign up here </NavLink>  </button>
                 </p>
                 </nav>
               </div>
